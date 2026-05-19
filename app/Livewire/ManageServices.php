@@ -3,15 +3,27 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\Service;
 
 class ManageServices extends Component
 {
+    use WithPagination;
+
+    public $search = '';
     public $service_id, $title, $desc;
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
     public function render()
     {
-        $services = Service::all();
+        $services = Service::where('title', 'like', '%' . $this->search . '%')
+            ->orWhere('desc', 'like', '%' . $this->search . '%')
+            ->paginate(10);
+            
         return view('livewire.manage-services', compact('services'))
             ->layout('layouts.app', ['header' => 'Manage Services']);
     }
