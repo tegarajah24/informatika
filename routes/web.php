@@ -6,6 +6,7 @@ use App\Livewire\Dashboard;
 use App\Livewire\ManageServices;
 use App\Livewire\ManagePortfolios;
 use App\Livewire\ManageTestimonials;
+use App\Livewire\DosenList;
 
 Route::get('/', LandingPage::class)->name('home');
 
@@ -19,4 +20,5 @@ Route::middleware([
     Route::get('/services', ManageServices::class)->name('services');
     Route::get('/portfolios', ManagePortfolios::class)->name('portfolios');
     Route::get('/testimonials', ManageTestimonials::class)->name('testimonials');
+    Route::get('/dosen', DosenList::class)->name('dosen');
 });

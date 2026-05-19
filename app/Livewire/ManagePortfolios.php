@@ -3,15 +3,26 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\Portfolio;
 
 class ManagePortfolios extends Component
 {
+    use WithPagination;
+
+    public $search = '';
     public $portfolio_id, $title, $image_url;
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
     public function render()
     {
-        $portfolios = Portfolio::all();
+        $portfolios = Portfolio::where('title', 'like', '%' . $this->search . '%')
+            ->paginate(10);
+            
         return view('livewire.manage-portfolios', compact('portfolios'))
             ->layout('layouts.app', ['header' => 'Manage Portfolios']);
     }

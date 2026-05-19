@@ -1,12 +1,15 @@
 <div>
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
             <flux:heading size="xl">Portfolios</flux:heading>
             <flux:subheading>Manage your portfolio items.</flux:subheading>
         </div>
-        <flux:button variant="primary" wire:click="create" x-on:click="$flux.modal('portfolio-modal').show()">
-            Add Portfolio
-        </flux:button>
+        <div class="flex items-center gap-4 w-full md:w-auto">
+            <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Search portfolios..." class="w-full md:w-64" />
+            <flux:button variant="primary" wire:click="create" x-on:click="$flux.modal('portfolio-modal').show()" class="shrink-0">
+                Add Portfolio
+            </flux:button>
+        </div>
     </div>
 
     @if (session()->has('message'))
@@ -47,6 +50,10 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+
+    <div class="mt-4">
+        {{ $portfolios->links() }}
     </div>
 
     <flux:modal name="portfolio-modal" class="md:w-96">
