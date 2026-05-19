@@ -104,23 +104,34 @@
         <script>
             // Show/hide page-transition overlay on wire:navigate events
             const overlay = document.getElementById('page-transition-overlay');
+            const MIN_DISPLAY_MS = 1000; // minimum spinner display time
+            let shownAt = null;
 
             function showOverlay() {
+                if (shownAt) return; // already showing
+                shownAt = Date.now();
                 overlay.style.display = 'flex';
-                // Small delay so display kicks in before opacity transition
                 requestAnimationFrame(() => {
                     requestAnimationFrame(() => { overlay.style.opacity = '1'; });
                 });
             }
 
             function hideOverlay() {
-                overlay.style.opacity = '0';
-                setTimeout(() => { overlay.style.display = 'none'; }, 250);
+                if (!shownAt) return;
+                const elapsed = Date.now() - shownAt;
+                const remaining = Math.max(0, MIN_DISPLAY_MS - elapsed);
+                setTimeout(() => {
+                    overlay.style.opacity = '0';
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                        shownAt = null;
+                    }, 250);
+                }, remaining);
             }
 
-            document.addEventListener('livewire:navigate',    showOverlay);
-            document.addEventListener('livewire:navigating',  showOverlay);
-            document.addEventListener('livewire:navigated',   hideOverlay);
+            document.addEventListener('livewire:navigate',   showOverlay);
+            document.addEventListener('livewire:navigating', showOverlay);
+            document.addEventListener('livewire:navigated',  hideOverlay);
         </script>
     </body>
 </html>
