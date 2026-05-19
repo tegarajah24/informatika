@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             DosenSeeder::class,
+            DummyDataSeeder::class,
         ]);
     }
 }

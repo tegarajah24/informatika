@@ -15,6 +15,7 @@
         <flux:navlist.item icon="rectangle-stack" href="{{ route('services') }}" :current="request()->routeIs('services')" wire:navigate.hover>Services</flux:navlist.item>
         <flux:navlist.item icon="photo" href="{{ route('portfolios') }}" :current="request()->routeIs('portfolios')" wire:navigate.hover>Portfolio</flux:navlist.item>
         <flux:navlist.item icon="chat-bubble-left-right" href="{{ route('testimonials') }}" :current="request()->routeIs('testimonials')" wire:navigate.hover>Testimonials</flux:navlist.item>
+        <flux:navlist.item icon="academic-cap" href="{{ route('dosen') }}" :current="request()->routeIs('dosen') || request()->routeIs('dosen.create')" wire:navigate.hover>Data Dosen</flux:navlist.item>
         <flux:navlist.item icon="user" href="{{ route('profile.show') }}" :current="request()->routeIs('profile.show')" wire:navigate.hover>Profile</flux:navlist.item>
         <flux:navlist.item icon="cog-6-tooth" href="#" wire:navigate.hover>Settings</flux:navlist.item>
     </flux:navlist>
