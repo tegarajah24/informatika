@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Dosen extends Model
+class Prodi extends Model
 {
     protected $guarded = [];
 
-    public function prodi()
+    public function dosens()
     {
-        return $this->belongsTo(Prodi::class);
+        return $this->hasMany(Dosen::class);
     }
 }

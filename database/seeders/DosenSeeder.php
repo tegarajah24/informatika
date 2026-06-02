@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Dosen;
+use App\Models\Prodi;
 
 class DosenSeeder extends Seeder
 {
@@ -12,6 +13,12 @@ class DosenSeeder extends Seeder
      */
     public function run(): void
     {
+        $prodis = [
+            Prodi::create(['name' => 'Informatika', 'code' => 'IF']),
+            Prodi::create(['name' => 'Sistem Informasi', 'code' => 'SI']),
+            Prodi::create(['name' => 'Teknik Komputer', 'code' => 'TK']),
+        ];
+
         $dosens = [
             [
                 'name' => 'Prof. Dr. Andi Wijaya',
@@ -100,6 +107,7 @@ class DosenSeeder extends Seeder
         ];
 
         foreach ($dosens as $dosen) {
+            $dosen['prodi_id'] = $prodis[array_rand($prodis)]->id;
             Dosen::create($dosen);
         }
     }

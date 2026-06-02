@@ -20,6 +20,9 @@ class DosenForm extends Form
     #[Validate('required|string')]
     public $title = ''; // Jabatan
 
+    #[Validate('nullable|exists:prodis,id')]
+    public $prodi_id = null;
+
     public function store()
     {
         $this->validate();
@@ -29,6 +32,7 @@ class DosenForm extends Form
             'nidn' => $this->nidn,
             'email' => $this->email,
             'title' => $this->title,
+            'prodi_id' => $this->prodi_id,
         ]);
 
         $this->reset();

@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use Livewire\Attributes\Url;
 use App\Models\Dosen;
 use App\Livewire\Forms\DosenForm;
+use Livewire\Attributes\Computed;
 
 class DosenList extends Component
 {
@@ -35,15 +36,25 @@ class DosenList extends Component
         session()->flash('message', 'Data dosen berhasil disimpan.');
     }
 
-    public function render()
+    #[Computed]
+    public function dosens()
     {
-        $dosens = Dosen::where(function($query) {
+        return Dosen::with('prodi')->where(function($query) {
             $query->where('name', 'like', '%' . $this->search . '%')
                 ->orWhere('nidn', 'like', '%' . $this->search . '%')
                 ->orWhere('title', 'like', '%' . $this->search . '%');
         })->paginate(5);
+    }
 
-        return view('livewire.dosen-list', compact('dosens'))
+    #[Computed]
+    public function prodis()
+    {
+        return \App\Models\Prodi::orderBy('name')->get();
+    }
+
+    public function render()
+    {
+        return view('livewire.dosen-list')
             ->layout('layouts.app', ['header' => 'Dosen']);
     }
 }
