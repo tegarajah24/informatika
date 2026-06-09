@@ -53,6 +53,7 @@
         ></div>
 
         <!-- Page-transition spinner overlay (wire:navigate only) -->
+        @persist('spinner-overlay')
         <div
             id="page-transition-overlay"
             class="fixed inset-0 z-[9998] flex items-center justify-center bg-white/60 dark:bg-zinc-900/60 backdrop-blur-sm opacity-0"
@@ -71,6 +72,7 @@
                 <p class="text-sm font-semibold text-blue-600 dark:text-blue-400 tracking-wide">Memuat halaman...</p>
             </div>
         </div>
+        @endpersist
 
         <x-banner />
 
@@ -101,14 +103,20 @@
         @livewireScripts
         @fluxScripts
 
-        <script>
-            // Show/hide page-transition overlay on wire:navigate events
-            const overlay = document.getElementById('page-transition-overlay');
-            const MIN_DISPLAY_MS = 1000; // minimum spinner display time
+        <script data-navigate-once>
+            const MIN_DISPLAY_MS = 1000;
             let shownAt = null;
+            let hideTimeout = null;
+
+            function getOverlay() {
+                return document.getElementById('page-transition-overlay');
+            }
 
             function showOverlay() {
-                if (shownAt) return; // already showing
+                const overlay = getOverlay();
+                if (!overlay) return;
+                if (hideTimeout) clearTimeout(hideTimeout);
+                overlay.style.pointerEvents = 'auto';
                 shownAt = Date.now();
                 overlay.style.display = 'flex';
                 requestAnimationFrame(() => {
@@ -117,21 +125,25 @@
             }
 
             function hideOverlay() {
-                if (!shownAt) return;
+                const overlay = getOverlay();
+                if (!overlay || !shownAt) return;
                 const elapsed = Date.now() - shownAt;
                 const remaining = Math.max(0, MIN_DISPLAY_MS - elapsed);
-                setTimeout(() => {
+                hideTimeout = setTimeout(() => {
                     overlay.style.opacity = '0';
+                    overlay.style.pointerEvents = 'none';
                     setTimeout(() => {
                         overlay.style.display = 'none';
                         shownAt = null;
+                        hideTimeout = null;
                     }, 250);
                 }, remaining);
             }
 
-            document.addEventListener('livewire:navigate',   showOverlay);
-            document.addEventListener('livewire:navigating', showOverlay);
-            document.addEventListener('livewire:navigated',  hideOverlay);
+            document.addEventListener('alpine:navigate', showOverlay);
+            document.addEventListener('alpine:navigating', showOverlay);
+            document.addEventListener('alpine:navigated', hideOverlay);
+            document.addEventListener('livewire:navigated', hideOverlay);
         </script>
     </body>
 </html>

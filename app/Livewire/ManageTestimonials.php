@@ -11,7 +11,7 @@ class ManageTestimonials extends Component
 
     public function render()
     {
-        $testimonials = Testimonial::all();
+        $testimonials = Testimonial::paginate(5);
         return view('livewire.manage-testimonials', compact('testimonials'))
             ->layout('layouts.app', ['header' => 'Manage Testimonials']);
     }
